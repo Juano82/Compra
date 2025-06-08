@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Trash2, Plus, ShoppingCart, CreditCard, Pencil, Store } from "lucide-react";
@@ -58,21 +57,29 @@ function App() {
     try {
       const savedItems = localStorage.getItem("shoppingList");
       return savedItems ? JSON.parse(savedItems) : [];
-    } catch {
+    } catch (error) {
+      console.error("Error loading items from localStorage:", error);
       return [];
     }
   });
+  
   const [newItem, setNewItem] = useState("");
   const [editingItem, setEditingItem] = useState(null);
   const [selectedSupermarket, setSelectedSupermarket] = useState(null);
-  const [isDoublePromo, setIsDoublePromo] = useState(false);
   const { toast } = useToast();
+  const [factor, setFactor] = useState(1); // Estado para x1/x2
 
   useEffect(() => {
-    localStorage.setItem("shoppingList", JSON.stringify(items));
+    try {
+      localStorage.setItem("shoppingList", JSON.stringify(items));
+    } catch (error) {
+      console.error("Error saving items to localStorage:", error);
+    }
   }, [items]);
 
-  const formatPrice = (price) => typeof price === 'number' ? price.toFixed(2) : "0.00";
+  const formatPrice = (price) => {
+    return typeof price === 'number' ? price.toFixed(2) : "0.00";
+  };
 
   const addItem = (e) => {
     e.preventDefault();
@@ -84,7 +91,7 @@ function App() {
       });
       return;
     }
-
+    
     const newItemObject = {
       id: Date.now(),
       name: newItem.trim(),
@@ -103,7 +110,7 @@ function App() {
   };
 
   const toggleItem = (id) => {
-    setItems(items.map(item =>
+    setItems(items.map(item => 
       item.id === id ? { ...item, completed: !item.completed } : item
     ));
   };
@@ -117,12 +124,14 @@ function App() {
     });
   };
 
-  const startEditing = (item) => setEditingItem({ ...item });
+  const startEditing = (item) => {
+    setEditingItem({ ...item });
+  };
 
   const updateItem = (e, id) => {
     e.preventDefault();
     const updatedItem = editingItem;
-
+    
     if (!updatedItem.name.trim()) {
       toast({
         title: "Error",
@@ -132,14 +141,12 @@ function App() {
       return;
     }
 
-    setItems(items.map(item =>
-      item.id === id
-        ? {
-            ...item,
-            ...updatedItem,
-            total: (updatedItem.price || 0) * (updatedItem.quantity || 1)
-          }
-        : item
+    setItems(items.map(item => 
+      item.id === id ? {
+        ...item,
+        ...updatedItem,
+        total: (updatedItem.price || 0) * (updatedItem.quantity || 1)
+      } : item
     ));
     setEditingItem(null);
     toast({
@@ -148,14 +155,12 @@ function App() {
     });
   };
 
-  const totalCompra = items.reduce((sum, item) => sum + (item.total || 0), 0);
+  // Suma original para la promo (sin factor)
+  const sumaOriginal = items.reduce((sum, item) => sum + (item.total || 0), 0);
+  // Aplico factor sólo a los displays de abajo
+  const totalCompra = sumaOriginal * factor;
   const supermarket = SUPERMARKETS.find(s => s.id === selectedSupermarket);
-  const effectiveDiscount = supermarket
-    ? (isDoublePromo ? supermarket.discountAmount * 2 : supermarket.discountAmount)
-    : 0;
-  const remainingForPromo = supermarket
-    ? Math.max(0, supermarket.minAmount - totalCompra)
-    : 0;
+  const remainingForPromo = supermarket ? Math.max(0, supermarket.minAmount - (sumaOriginal * factor)) : 0;
 
   return (
     <div className="shopping-list min-h-screen">
@@ -189,9 +194,13 @@ function App() {
             ))}
           </SelectContent>
         </Select>
-
+        
         {supermarket && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-2 space-y-2">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mt-2"
+          >
             <div className="flex items-center justify-between">
               <div className="promotion-tag">
                 <span className="mr-1">🏷️</span>
@@ -205,18 +214,6 @@ function App() {
             <div className="promo-info">
               <span>Días: {supermarket.promoDay}</span>
               <span>Min: ${formatPrice(supermarket.minAmount)}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="doublePromo"
-                checked={isDoublePromo}
-                onChange={(e) => setIsDoublePromo(e.target.checked)}
-                className="w-4 h-4"
-              />
-              <label htmlFor="doublePromo" className="text-sm font-medium">
-                x2 (doble promo)
-              </label>
             </div>
           </motion.div>
         )}
@@ -355,31 +352,34 @@ function App() {
           animate={{ opacity: 1 }}
           className="fixed bottom-0 left-0 right-0 p-4"
         >
-          <div className="max-w-md mx-auto budget-info rounded-xl space-y-1">
-            <div className="flex justify-between items-center">
+          <div className="max-w-md mx-auto budget-info rounded-xl">
+            <div className="flex justify-between items-center mb-1">
               <span className="text-sm">Total de la compra:</span>
               <span className="text-lg font-bold">${formatPrice(totalCompra)}</span>
             </div>
             {supermarket && (
-              <>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Falta para promoción:</span>
-                  <span className={`text-lg font-bold ${remainingForPromo === 0 ? 'text-green-300' : 'text-orange-300'}`}>
-                    ${formatPrice(remainingForPromo)}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Beneficio actual:</span>
-                  <span className="text-lg font-bold text-green-400">
-                    ${formatPrice(effectiveDiscount)}
-                  </span>
-                </div>
-              </>
+              <div className="flex justify-between items-center">
+                <span className="text-sm">Falta para promoción:</span>
+                <span className={`text-lg font-bold ${remainingForPromo === 0 ? 'text-green-300' : 'text-orange-300'}`}>
+                  ${formatPrice(remainingForPromo)}
+                </span>
+              </div>
             )}
+            {/* Botón x1/x2 */}
+            <div className="flex justify-end mt-2">
+              <Button
+                type="button"
+                variant={factor === 2 ? "default" : "outline"}
+                size="sm"
+                onClick={() => setFactor(factor === 2 ? 1 : 2)}
+              >
+                {factor === 2 ? "x2" : "x1"}
+              </Button>
+            </div>
           </div>
         </motion.div>
       )}
-
+      
       <Toaster />
     </div>
   );
