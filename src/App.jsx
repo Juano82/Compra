@@ -18,8 +18,8 @@ const SUPERMARKETS = [
     id: 1,
     name: "MAXICONSUMO",
     promotion: "25% de descuento",
-    minAmount: 44000,
-    discountAmount: 11000,
+    minAmount: 88000,
+    discountAmount: 22000,
     promoDay: "TODOS LOS DÍAS",
     paymentMethod: "qr o tarjeta"
   },
@@ -27,8 +27,8 @@ const SUPERMARKETS = [
     id: 2,
     name: "VITAL",
     promotion: "25% de descuento",
-    minAmount: 42000,
-    discountAmount: 10500,
+    minAmount: 84000,
+    discountAmount: 21000,
     promoDay: "MIÉRCOLES Y JUEVES",
     paymentMethod: "tarjeta"
   },
@@ -36,8 +36,8 @@ const SUPERMARKETS = [
     id: 3,
     name: "DIA%",
     promotion: "25% de descuento",
-    minAmount: 48000,
-    discountAmount: 12000,
+    minAmount: 96000,
+    discountAmount: 24000,
     promoDay: "JUEVES",
     paymentMethod: "qr o tarjeta"
   },
@@ -45,8 +45,8 @@ const SUPERMARKETS = [
     id: 4,
     name: "MAKRO",
     promotion: "25% de descuento",
-    minAmount: 42000,
-    discountAmount: 10500,
+    minAmount: 84000,
+    discountAmount: 21000,
     promoDay: "MIÉRCOLES Y JUEVES",
     paymentMethod: "tarjeta"
   }
