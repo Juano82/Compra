@@ -62,7 +62,7 @@ function App() {
       return [];
     }
   });
-  
+
   const [newItem, setNewItem] = useState("");
   const [editingItem, setEditingItem] = useState(null);
   const [selectedSupermarket, setSelectedSupermarket] = useState(null);
@@ -91,7 +91,7 @@ function App() {
       });
       return;
     }
-    
+
     const newItemObject = {
       id: Date.now(),
       name: newItem.trim(),
@@ -110,7 +110,7 @@ function App() {
   };
 
   const toggleItem = (id) => {
-    setItems(items.map(item => 
+    setItems(items.map(item =>
       item.id === id ? { ...item, completed: !item.completed } : item
     ));
   };
@@ -131,7 +131,7 @@ function App() {
   const updateItem = (e, id) => {
     e.preventDefault();
     const updatedItem = editingItem;
-    
+
     if (!updatedItem.name.trim()) {
       toast({
         title: "Error",
@@ -141,7 +141,7 @@ function App() {
       return;
     }
 
-    setItems(items.map(item => 
+    setItems(items.map(item =>
       item.id === id ? {
         ...item,
         ...updatedItem,
@@ -159,6 +159,9 @@ function App() {
   const supermarket = SUPERMARKETS.find(s => s.id === selectedSupermarket);
   const minAmountTope = supermarket
     ? supermarket.minAmount * (duplicarPromo ? 2 : 1)
+    : 0;
+  const discountAmountTope = supermarket
+    ? supermarket.discountAmount * (duplicarPromo ? 2 : 1)
     : 0;
   const remainingForPromo = supermarket
     ? Math.max(0, minAmountTope - totalCompra)
@@ -196,7 +199,7 @@ function App() {
             ))}
           </SelectContent>
         </Select>
-        
+
         {supermarket && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -213,9 +216,16 @@ function App() {
                 {supermarket.paymentMethod}
               </span>
             </div>
-            <div className="promo-info">
+            <div className="promo-info flex flex-col gap-1">
               <span>Días: {supermarket.promoDay}</span>
-              <span>Min: ${formatPrice(supermarket.minAmount)}</span>
+              <span>
+                Min: ${formatPrice(minAmountTope)}
+                {duplicarPromo && <span className="ml-1 text-xs text-green-600">(x2)</span>}
+              </span>
+              <span>
+                Descuento: ${formatPrice(discountAmountTope)}
+                {duplicarPromo && <span className="ml-1 text-xs text-green-600">(x2)</span>}
+              </span>
             </div>
             <div className="flex items-center mt-2">
               <input
@@ -382,7 +392,7 @@ function App() {
           </div>
         </motion.div>
       )}
-      
+
       <Toaster />
     </div>
   );
