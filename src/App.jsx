@@ -217,6 +217,7 @@ function App() {
               <span>Días: {supermarket.promoDay}</span>
               <span>Min: ${formatPrice(supermarket.minAmount)}</span>
             </div>
+            {/* Checkbox para duplicar saldo tope */}
             <div className="flex items-center mt-2">
               <input
                 type="checkbox"
