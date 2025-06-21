@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Trash2, Plus, ShoppingCart, CreditCard, Pencil, Store } from "lucide-react";
@@ -67,6 +66,7 @@ function App() {
   const [newItem, setNewItem] = useState("");
   const [editingItem, setEditingItem] = useState(null);
   const [selectedSupermarket, setSelectedSupermarket] = useState(null);
+  const [duplicarPromo, setDuplicarPromo] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -157,7 +157,12 @@ function App() {
 
   const totalCompra = items.reduce((sum, item) => sum + (item.total || 0), 0);
   const supermarket = SUPERMARKETS.find(s => s.id === selectedSupermarket);
-  const remainingForPromo = supermarket ? Math.max(0, supermarket.minAmount - totalCompra) : 0;
+  const minAmountTope = supermarket
+    ? supermarket.minAmount * (duplicarPromo ? 2 : 1)
+    : 0;
+  const remainingForPromo = supermarket
+    ? Math.max(0, minAmountTope - totalCompra)
+    : 0;
 
   return (
     <div className="shopping-list min-h-screen">
@@ -211,6 +216,18 @@ function App() {
             <div className="promo-info">
               <span>Días: {supermarket.promoDay}</span>
               <span>Min: ${formatPrice(supermarket.minAmount)}</span>
+            </div>
+            <div className="flex items-center mt-2">
+              <input
+                type="checkbox"
+                id="duplicarPromo"
+                checked={duplicarPromo}
+                onChange={() => setDuplicarPromo(!duplicarPromo)}
+                className="mr-2"
+              />
+              <label htmlFor="duplicarPromo" className="text-sm">
+                Duplicar saldo tope de promo
+              </label>
             </div>
           </motion.div>
         )}
