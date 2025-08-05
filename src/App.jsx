@@ -16,39 +16,75 @@ import {
 const SUPERMARKETS = [
   {
     id: 1,
-    name: "MAXICONSUMO",
-    promotion: "25% de descuento",
-    minAmount: 44000,
-    discountAmount: 11000,
-    promoDay: "TODOS LOS DÍAS",
-    paymentMethod: "qr o tarjeta"
+    name: "Vital",
+    promotion: "30% de descuento",
+    minAmount: 0,
+    discountAmount: $30000,
+    promoDay: "Lunes",
+    paymentMethod: "buepp, modo"
   },
   {
     id: 2,
-    name: "VITAL",
+    name: "vITAL",
     promotion: "25% de descuento",
-    minAmount: 42000,
-    discountAmount: 10500,
-    promoDay: "MIÉRCOLES Y JUEVES",
-    paymentMethod: "tarjeta"
+    minAmount: 0,
+    discountAmount: $10000,
+    promoDay: "Viernes, Sabados",
+    paymentMethod: "MODO"
   },
   {
     id: 3,
-    name: "DIA%",
-    promotion: "25% de descuento",
-    minAmount: 48000,
-    discountAmount: 12000,
-    promoDay: "JUEVES",
-    paymentMethod: "qr o tarjeta"
+    name: "Disco",
+    promotion: "20% de descuento",
+    minAmount: 0,
+    discountAmount: 0,
+    promoDay: "Todos los días",
+    paymentMethod: "MODO, Buepp"
   },
   {
     id: 4,
-    name: "MAKRO",
+    name: "Supermercados del interior",
     promotion: "25% de descuento",
-    minAmount: 42000,
-    discountAmount: 10500,
-    promoDay: "MIÉRCOLES Y JUEVES",
-    paymentMethod: "tarjeta"
+    minAmount: 0,
+    discountAmount: 0,
+    promoDay: "Todos los días",
+    paymentMethod: "MODO, Buepp"
+  },
+  {
+    id: 5,
+    name: "Jumbo",
+    promotion: "20% de descuento",
+    minAmount: 0,
+    discountAmount: 0,
+    promoDay: "Todos los días",
+    paymentMethod: "MODO, Buepp"
+  },
+  {
+    id: 6,
+    name: "Vea",
+    promotion: "20% de descuento",
+    minAmount: 0,
+    discountAmount: 0,
+    promoDay: "Todos los días",
+    paymentMethod: "MODO, Buepp"
+  },
+  {
+    id: 7,
+    name: "El Puente",
+    promotion: "20% de descuento",
+    minAmount: 0,
+    discountAmount: 0,
+    promoDay: "Todos los días",
+    paymentMethod: "MODO, Buepp"
+  },
+  {
+    id: 8,
+    name: "ChangoMás",
+    promotion: "20% de descuento",
+    minAmount: 0,
+    discountAmount: 0,
+    promoDay: "Todos los días",
+    paymentMethod: "MODO, Buepp"
   }
 ];
 
