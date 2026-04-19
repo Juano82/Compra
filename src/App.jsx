@@ -196,21 +196,7 @@ function App() {
             <div className="promo-info flex flex-col gap-1">
               <span>
                 Descuento aplicado: ${formatPrice(discountApplied)}
-                {duplicarPromo && <span className="ml-1 text-xs text-green-600">(x2)</span>}
               </span>
-            </div>
-            {/* Checkbox para duplicar saldo tope */}
-            <div className="flex items-center mt-2">
-              <input
-                type="checkbox"
-                id="duplicarPromo"
-                checked={duplicarPromo}
-                onChange={() => setDuplicarPromo(!duplicarPromo)}
-                className="mr-2"
-              />
-              <label htmlFor="duplicarPromo" className="text-sm">
-                Duplicar saldo tope de promo
-              </label>
             </div>
           </motion.div>
         )}
