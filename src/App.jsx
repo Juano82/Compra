@@ -16,39 +16,12 @@ import {
 const SUPERMARKETS = [
   {
     id: 1,
-    name: "MAXICONSUMO",
-    promotion: "25% de descuento",
-    minAmount: 88000,
-    discountAmount: 22000,
+    name: "DIARCO",
+    promotion: "15% de descuento",
+    minAmount: 0,
+    discountAmount: 13200,
     promoDay: "TODOS LOS DÍAS",
     paymentMethod: "qr o tarjeta"
-  },
-  {
-    id: 2,
-    name: "VITAL",
-    promotion: "25% de descuento",
-    minAmount: 84000,
-    discountAmount: 21000,
-    promoDay: "MIÉRCOLES Y JUEVES",
-    paymentMethod: "tarjeta"
-  },
-  {
-    id: 3,
-    name: "DIA%",
-    promotion: "25% de descuento",
-    minAmount: 96000,
-    discountAmount: 24000,
-    promoDay: "JUEVES",
-    paymentMethod: "qr o tarjeta"
-  },
-  {
-    id: 4,
-    name: "MAKRO",
-    promotion: "25% de descuento",
-    minAmount: 84000,
-    discountAmount: 21000,
-    promoDay: "MIÉRCOLES Y JUEVES",
-    paymentMethod: "tarjeta"
   }
 ];
 
@@ -166,6 +139,10 @@ function App() {
   const remainingForPromo = supermarket
     ? Math.max(0, minAmountTope - totalCompra)
     : 0;
+  const discountApplied = supermarket
+    ? Math.min(totalCompra * 0.15, discountAmountTope)
+    : 0;
+  const totalWithDiscount = totalCompra - discountApplied;
 
   return (
     <div className="shopping-list min-h-screen">
@@ -384,9 +361,9 @@ function App() {
             </div>
             {supermarket && (
               <div className="flex justify-between items-center">
-                <span className="text-sm">Falta para promoción:</span>
-                <span className={`text-lg font-bold ${remainingForPromo === 0 ? 'text-green-300' : 'text-orange-300'}`}>
-                  ${formatPrice(remainingForPromo)}
+                <span className="text-sm">Total con descuento:</span>
+                <span className="text-lg font-bold text-green-300">
+                  ${formatPrice(totalWithDiscount)}
                 </span>
               </div>
             )}
