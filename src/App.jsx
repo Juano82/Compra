@@ -21,7 +21,7 @@ const SUPERMARKETS = [
     minAmount: 0,
     discountAmount: 13200,
     promoDay: "TODOS LOS DÍAS",
-    paymentMethod: "qr o tarjeta"
+    paymentMethod: "MODO"
   }
 ];
 
@@ -194,13 +194,8 @@ function App() {
               </span>
             </div>
             <div className="promo-info flex flex-col gap-1">
-              <span>Días: {supermarket.promoDay}</span>
               <span>
-                Min: ${formatPrice(minAmountTope)}
-                {duplicarPromo && <span className="ml-1 text-xs text-green-600">(x2)</span>}
-              </span>
-              <span>
-                Descuento: ${formatPrice(discountAmountTope)}
+                Descuento aplicado: ${formatPrice(discountApplied)}
                 {duplicarPromo && <span className="ml-1 text-xs text-green-600">(x2)</span>}
               </span>
             </div>
