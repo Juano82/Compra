@@ -39,6 +39,7 @@ function App() {
   const [newItem, setNewItem] = useState("");
   const [editingItem, setEditingItem] = useState(null);
   const [selectedSupermarket, setSelectedSupermarket] = useState(null);
+  const [shareLink, setShareLink] = useState("");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -49,8 +50,63 @@ function App() {
     }
   }, [items]);
 
+  useEffect(() => {
+    try {
+      const hash = window.location.hash;
+      if (hash.startsWith("#share=")) {
+        const encoded = hash.replace("#share=", "");
+        const decoded = JSON.parse(decodeURIComponent(escape(atob(encoded))));
+        if (decoded.items) {
+          setItems(decoded.items);
+        }
+        if (decoded.selectedSupermarket) {
+          setSelectedSupermarket(decoded.selectedSupermarket);
+        }
+      }
+    } catch (error) {
+      console.error("Error loading shared list:", error);
+    }
+  }, []);
+
   const formatPrice = (price) => {
     return typeof price === 'number' ? price.toFixed(2) : "0.00";
+  };
+
+  const encodeShareData = (data) => {
+    return btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+  };
+
+  const createShareLink = async () => {
+    if (!items.length) {
+      toast({
+        title: "Lista vacía",
+        description: "Agrega al menos un producto antes de sincronizar.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const payload = {
+      items,
+      selectedSupermarket,
+    };
+    const encoded = encodeShareData(payload);
+    const url = `${window.location.origin}${window.location.pathname}#share=${encoded}`;
+
+    try {
+      await navigator.clipboard.writeText(url);
+      toast({
+        title: "Enlace copiado",
+        description: "Pega ese enlace en otro dispositivo para ver la lista.",
+      });
+      setShareLink("");
+    } catch (error) {
+      setShareLink(url);
+      toast({
+        title: "No se pudo copiar automáticamente",
+        description: "Copia el enlace manualmente del campo que aparece.",
+      });
+    }
   };
 
   const addItem = (e) => {
@@ -189,6 +245,17 @@ function App() {
           </motion.div>
         )}
       </motion.div>
+
+      <div className="sync-actions mt-4 mb-4">
+        <Button variant="outline" size="sm" onClick={createShareLink}>
+          Copiar enlace de sincronización
+        </Button>
+        {shareLink && (
+          <div className="mt-2 break-all text-sm text-blue-600">
+            <a href={shareLink} target="_blank" rel="noreferrer">{shareLink}</a>
+          </div>
+        )}
+      </div>
 
       <form onSubmit={addItem} className="add-item-form glass-card">
         <div className="flex gap-2">
