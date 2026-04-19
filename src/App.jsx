@@ -39,7 +39,6 @@ function App() {
   const [newItem, setNewItem] = useState("");
   const [editingItem, setEditingItem] = useState(null);
   const [selectedSupermarket, setSelectedSupermarket] = useState(null);
-  const [duplicarPromo, setDuplicarPromo] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -130,14 +129,8 @@ function App() {
 
   const totalCompra = items.reduce((sum, item) => sum + (item.total || 0), 0);
   const supermarket = SUPERMARKETS.find(s => s.id === selectedSupermarket);
-  const minAmountTope = supermarket
-    ? supermarket.minAmount * (duplicarPromo ? 2 : 1)
-    : 0;
   const discountAmountTope = supermarket
-    ? supermarket.discountAmount * (duplicarPromo ? 2 : 1)
-    : 0;
-  const remainingForPromo = supermarket
-    ? Math.max(0, minAmountTope - totalCompra)
+    ? supermarket.discountAmount
     : 0;
   const discountApplied = supermarket
     ? Math.min(totalCompra * 0.15, discountAmountTope)
@@ -193,11 +186,6 @@ function App() {
                 {supermarket.paymentMethod}
               </span>
             </div>
-            <div className="promo-info flex flex-col gap-1">
-              <span>
-                Descuento aplicado: ${formatPrice(discountApplied)}
-              </span>
-            </div>
           </motion.div>
         )}
       </motion.div>
@@ -217,7 +205,7 @@ function App() {
         </div>
       </form>
 
-      <div className="item-list">
+      <div className="item-list" style={{ paddingBottom: '180px' }}>
         <AnimatePresence>
           {items.map((item) => (
             <motion.div
@@ -341,12 +329,16 @@ function App() {
               <span className="text-lg font-bold">${formatPrice(totalCompra)}</span>
             </div>
             {supermarket && (
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Total con descuento:</span>
-                <span className="text-lg font-bold text-green-300">
-                  ${formatPrice(totalWithDiscount)}
-                </span>
-              </div>
+              <>
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-sm">Descuento:</span>
+                  <span className="text-lg font-bold text-green-300">-${formatPrice(discountApplied)}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm">Total con descuento:</span>
+                  <span className="text-lg font-bold text-green-300">${formatPrice(totalWithDiscount)}</span>
+                </div>
+              </>
             )}
           </div>
         </motion.div>
